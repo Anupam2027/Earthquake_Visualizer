@@ -44,9 +44,9 @@ export default function Navbar({
   };
 
   return (
-    <header className="bg-slate-900 dark:bg-slate-800 text-white shadow w-full">
-  <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3 w-full">
-
+    <header className="bg-slate-900 dark:bg-slate-800 text-white shadow">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Title */}
         <h1 className="text-xl font-bold">Earthquakes Worldwide</h1>
 
         <div className="flex items-center gap-3 w-full md:w-auto flex-wrap justify-center">

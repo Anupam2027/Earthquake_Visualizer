@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/Navbar";
 import MapView from "./components/MapView";
 
@@ -14,13 +14,14 @@ const FEEDS = {
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export default function App() {
-  const [presetDays, setPresetDays] = useState(7);
+  // state
+  const [presetDays, setPresetDays] = useState(7); // default = 7 days
   const [customRange, setCustomRange] = useState([null, null]);
   const [earthquakes, setEarthquakes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchTrigger, setSearchTrigger] = useState(0);
 
-  const getRange = () => {
+  // calculate start & end timestamps
+  const { startTs, endTs } = useMemo(() => {
     const now = Date.now();
     if (customRange[0] && customRange[1]) {
       return {
@@ -29,21 +30,22 @@ export default function App() {
       };
     }
     return { startTs: now - presetDays * MS_PER_DAY, endTs: now };
-  };
+  }, [customRange, presetDays]);
 
-  const selectFeedUrl = (startTs, endTs) => {
+  // select feed URL (to avoid downloading unnecessary data)
+  const selectFeedUrl = () => {
     const days = Math.max(1, Math.ceil((endTs - startTs) / MS_PER_DAY));
     if (days <= 1) return FEEDS.all_day;
     if (days <= 7) return FEEDS.all_week;
     return FEEDS.all_month;
   };
 
+  // fetch earthquake data
   useEffect(() => {
     const fetchData = async () => {
-      const { startTs, endTs } = getRange();
       setLoading(true);
       try {
-        const url = selectFeedUrl(startTs, endTs);
+        const url = selectFeedUrl();
         const res = await fetch(url);
         const data = await res.json();
         const filtered = (data.features || []).filter((f) => {
@@ -57,24 +59,18 @@ export default function App() {
         setLoading(false);
       }
     };
-
-    if (searchTrigger > 0) {
-      fetchData();
-    }
-  }, [searchTrigger]);
+    fetchData();
+  }, [startTs, endTs, presetDays, customRange]);
 
   return (
-  <div className="flex flex-col h-screen w-screen overflow-hidden">
-    <Navbar
-      presetDays={presetDays}
-      setPresetDays={setPresetDays}
-      customRange={customRange}
-      setCustomRange={setCustomRange}
-      setSearchTrigger={setSearchTrigger}
-    />
-    <div className="flex-1">
+    <div className="flex flex-col h-screen">
+      <Navbar
+        presetDays={presetDays}
+        setPresetDays={setPresetDays}
+        customRange={customRange}
+        setCustomRange={setCustomRange}
+      />
       <MapView earthquakes={earthquakes} loading={loading} />
     </div>
-  </div>
-);
+  );
 }

@@ -42,13 +42,13 @@ export default function MapView({ earthquakes, loading, flyToCoords, setFlyToCoo
         </div>
       )}
 
-       <MapContainer
-    center={[20, 0]}
-    zoom={2}
-    className="h-full w-full"
-    whenCreated={(m) => (mapRef.current = m)}
-    scrollWheelZoom
-  >
+      <MapContainer
+        center={[20, 0]}
+        zoom={2}
+        className="h-full w-full"
+        whenCreated={(m) => (mapRef.current = m)}
+        scrollWheelZoom
+      >
         <LayersControl position="topright">
           {/* Base layers */}
           <LayersControl.BaseLayer checked name="OpenStreetMap">
