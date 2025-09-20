@@ -35,3 +35,13 @@ html, body, #root {
   text-align: center;
   border-radius: 50%;
 }
+/* Map ko पीछे रखना */
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+/* Navbar हमेशा ऊपर रहे */
+header {
+  position: relative;
+  z-index: 1000 !important;
+}

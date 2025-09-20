@@ -36,9 +36,29 @@ export default function MapView({ earthquakes, loading, flyToCoords, setFlyToCoo
 
   return (
     <div className="relative h-full w-full">
+      {/* Flat Minimalist Spinner */}
       {loading && (
-        <div className="absolute z-50 top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 px-4 py-2 rounded shadow">
-          Loading...
+        <div className="absolute inset-0 flex items-center justify-center z-50">
+          <svg
+            className="w-12 h-12 text-gray-600 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            ></path>
+          </svg>
         </div>
       )}
 
@@ -51,12 +71,26 @@ export default function MapView({ earthquakes, loading, flyToCoords, setFlyToCoo
       >
         <LayersControl position="topright">
           {/* Base layers */}
-          <LayersControl.BaseLayer checked name="OpenStreetMap">
+          <LayersControl.BaseLayer checked name="OpenStreetMap.Mapnik">
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           </LayersControl.BaseLayer>
 
-          <LayersControl.BaseLayer name="Satellite">
-            <TileLayer url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" />
+          <LayersControl.BaseLayer name="OpenStreetMap.BlackAndWhite">
+            <TileLayer url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png" />
+          </LayersControl.BaseLayer>
+
+          <LayersControl.BaseLayer name="Google Streets">
+            <TileLayer
+              url="https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+              subdomains={["mt0", "mt1", "mt2", "mt3"]}
+            />
+          </LayersControl.BaseLayer>
+
+          <LayersControl.BaseLayer name="Google Satellite">
+            <TileLayer
+              url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+              subdomains={["mt0", "mt1", "mt2", "mt3"]}
+            />
           </LayersControl.BaseLayer>
 
           {/* Tectonic Plates overlay */}

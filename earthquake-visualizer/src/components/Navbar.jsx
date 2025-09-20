@@ -11,11 +11,11 @@ export default function Navbar({
 }) {
   const [theme, setTheme] = useDarkMode();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [startDate, setStartDate] = useState(customRange[0]);
   const [endDate, setEndDate] = useState(customRange[1]);
 
-  // Dropdown options
   const presetOptions = [
     { label: "1 Day", value: 1 },
     { label: "3 Days", value: 3 },
@@ -31,6 +31,7 @@ export default function Navbar({
     setStartDate(null);
     setEndDate(null);
     setDropdownOpen(false);
+    setMenuOpen(false); // 👈 auto close hamburger after selecting
   };
 
   const handleDateChange = (type, value) => {
@@ -41,25 +42,32 @@ export default function Navbar({
       setEndDate(value);
       setCustomRange([startDate, value]);
     }
+    setMenuOpen(false); // 👈 close after picking date
+  };
+
+  const handleThemeToggle = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+    setMenuOpen(false); // 👈 close after theme toggle
   };
 
   return (
-    <header className="bg-slate-900 dark:bg-slate-800 text-white shadow">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+    <header className="bg-slate-900 dark:bg-slate-800 text-white shadow relative z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Title */}
-        <h1 className="text-xl font-bold">Earthquakes Worldwide</h1>
+        <h1 className="text-lg md:text-xl font-bold">🌍 Earthquakes Worldwide</h1>
 
-        <div className="flex items-center gap-3 w-full md:w-auto flex-wrap justify-center">
-          {/* Dropdown for Days */}
-          <div className="relative">
+        {/* Desktop Controls */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Days Dropdown */}
+          <div className="relative z-[2000]">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-md text-sm"
+              className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-md text-sm w-28 text-center"
             >
               {presetDays} Days ▼
             </button>
             {dropdownOpen && (
-              <div className="absolute mt-1 w-32 bg-white text-black rounded-md shadow-lg z-50">
+              <div className="absolute mt-1 w-32 bg-white text-black rounded-md shadow-lg z-[2000]">
                 {presetOptions.map((opt) => (
                   <button
                     key={opt.value}
@@ -75,7 +83,7 @@ export default function Navbar({
             )}
           </div>
 
-          {/* Start Date */}
+          {/* Date Pickers */}
           <DatePicker
             selected={startDate}
             onChange={(date) => handleDateChange("start", date)}
@@ -83,10 +91,8 @@ export default function Navbar({
             startDate={startDate}
             endDate={endDate}
             placeholderText="Start Date"
-            className="px-3 py-1 rounded-md text-sm bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="px-3 py-1 rounded-md text-sm bg-white text-black w-36 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-
-          {/* End Date */}
           <DatePicker
             selected={endDate}
             onChange={(date) => handleDateChange("end", date)}
@@ -95,18 +101,85 @@ export default function Navbar({
             endDate={endDate}
             minDate={startDate}
             placeholderText="End Date"
-            className="px-3 py-1 rounded-md text-sm bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="px-3 py-1 rounded-md text-sm bg-white text-black w-36 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+
+          {/* Theme Toggle */}
+          <button
+            onClick={handleThemeToggle}
+            className="px-3 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-sm"
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
         </div>
 
-        {/* Right Side: Theme toggle */}
+        {/* Mobile Hamburger Button */}
         <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="px-3 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-sm"
+          className="md:hidden p-2 bg-slate-700 rounded-md"
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          {theme === "dark" ? "☀️" : "🌙"}
+          {menuOpen ? "✖" : "☰"}
         </button>
       </div>
+
+      {/* Mobile Dropdown Menu */}
+      {menuOpen && (
+        <div className="md:hidden px-4 pb-4 flex flex-col gap-3 bg-slate-800">
+          {/* Days Dropdown */}
+          <div className="relative z-[2000]">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-md text-sm w-full text-left"
+            >
+              {presetDays} Days ▼
+            </button>
+            {dropdownOpen && (
+              <div className="absolute mt-1 w-full bg-white text-black rounded-md shadow-lg z-[2000]">
+                {presetOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handlePreset(opt.value)}
+                    className={`block w-full text-left px-3 py-1 text-sm hover:bg-blue-100 ${
+                      presetDays === opt.value ? "bg-blue-200 font-semibold" : ""
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Date Pickers */}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => handleDateChange("start", date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="Start Date"
+            className="px-3 py-1 rounded-md text-sm bg-white text-black w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => handleDateChange("end", date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            placeholderText="End Date"
+            className="px-3 py-1 rounded-md text-sm bg-white text-black w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          {/* Theme Toggle */}
+          <button
+            onClick={handleThemeToggle}
+            className="px-3 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-sm w-full"
+          >
+            {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+          </button>
+        </div>
+      )}
     </header>
   );
 }
