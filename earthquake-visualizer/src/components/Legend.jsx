@@ -1,19 +1,16 @@
-import React from 'react';
-
-function Legend() {
-  return (
-    <div className="absolute bottom-8 right-8 bg-white rounded shadow p-3">
-      <div className="font-bold">Magnitude</div>
-      <div className="flex flex-col gap-1 mt-2">
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-green-400"></span>0–1</div>
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-yellow-300"></span>1–2</div>
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-yellow-500"></span>2–3</div>
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-orange-500"></span>3–5</div>
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-red-500"></span>5–7</div>
-        <div className="flex items-center"><span className="w-4 h-4 inline-block mr-2 bg-red-700"></span>7+</div>
-      </div>
-    </div>
-  );
-}
-
-export default Legend;
+{/* Floating Legend */}
+<div className="absolute bottom-4 left-4 bg-white dark:bg-slate-800 rounded-lg shadow p-3 text-sm text-black dark:text-white">
+  <div className="font-semibold mb-1">Magnitude</div>
+  <div className="flex items-center gap-2">
+    <span className="w-4 h-4 bg-green-500 border border-gray-300 dark:border-gray-700 inline-block"></span> 0–2
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="w-4 h-4 bg-yellow-500 border border-gray-300 dark:border-gray-700 inline-block"></span> 2–4
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="w-4 h-4 bg-orange-500 border border-gray-300 dark:border-gray-700 inline-block"></span> 4–6
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="w-4 h-4 bg-red-600 border border-gray-300 dark:border-gray-700 inline-block"></span> 6+
+  </div>
+</div>

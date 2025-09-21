@@ -31,7 +31,7 @@ export default function Navbar({
     setStartDate(null);
     setEndDate(null);
     setDropdownOpen(false);
-    setMenuOpen(false); // 👈 auto close hamburger after selecting
+    setMenuOpen(false); 
   };
 
   const handleDateChange = (type, value) => {
@@ -42,19 +42,19 @@ export default function Navbar({
       setEndDate(value);
       setCustomRange([startDate, value]);
     }
-    setMenuOpen(false); // 👈 close after picking date
+    setMenuOpen(false); 
   };
 
   const handleThemeToggle = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-    setMenuOpen(false); // 👈 close after theme toggle
+    setMenuOpen(false); 
   };
 
   return (
     <header className="bg-slate-900 dark:bg-slate-800 text-white shadow relative z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Title */}
-        <h1 className="text-lg md:text-xl font-bold">🌍 Earthquakes Worldwide</h1>
+        <h1 className="text-lg md:text-xl font-bold">🌍 Earthquakes Visualizer</h1>
 
         {/* Desktop Controls */}
         <div className="hidden md:flex items-center gap-3">
