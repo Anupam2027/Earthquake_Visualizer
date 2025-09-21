@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useDarkMode from "../hooks/useDarkMode";
@@ -16,6 +16,8 @@ export default function Navbar({
   const [startDate, setStartDate] = useState(customRange[0]);
   const [endDate, setEndDate] = useState(customRange[1]);
 
+  const dropdownRef = useRef(null); // 🔹 Dropdown reference
+
   const presetOptions = [
     { label: "1 Day", value: 1 },
     { label: "3 Days", value: 3 },
@@ -31,7 +33,7 @@ export default function Navbar({
     setStartDate(null);
     setEndDate(null);
     setDropdownOpen(false);
-    setMenuOpen(false); 
+    setMenuOpen(false);
   };
 
   const handleDateChange = (type, value) => {
@@ -42,13 +44,24 @@ export default function Navbar({
       setEndDate(value);
       setCustomRange([startDate, value]);
     }
-    setMenuOpen(false); 
+    setMenuOpen(false);
   };
 
   const handleThemeToggle = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-    setMenuOpen(false); 
+    setMenuOpen(false);
   };
+
+  // 🔹 Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-slate-900 dark:bg-slate-800 text-white shadow relative z-50">
@@ -59,7 +72,7 @@ export default function Navbar({
         {/* Desktop Controls */}
         <div className="hidden md:flex items-center gap-3">
           {/* Days Dropdown */}
-          <div className="relative z-[2000]">
+          <div className="relative z-[2000]" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-md text-sm w-28 text-center"
@@ -126,7 +139,7 @@ export default function Navbar({
       {menuOpen && (
         <div className="md:hidden px-4 pb-4 flex flex-col gap-3 bg-slate-800">
           {/* Days Dropdown */}
-          <div className="relative z-[2000]">
+          <div className="relative z-[2000]" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-md text-sm w-full text-left"
